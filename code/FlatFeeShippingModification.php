@@ -12,6 +12,8 @@ class FlatFeeShippingModification extends Modification {
 	);
 
 	private static $default_sort = 'SortOrder ASC';
+	
+	protected $default_rate = false;
 
 	public function add($order, $value = null) {
 
@@ -23,12 +25,28 @@ class FlatFeeShippingModification extends Modification {
 
 		$rates = $this->getFlatShippingRates($country);
 		if ($rates && $rates->exists()) {
-Debug::show($rates);
-			//Pick the rate
-			$rate = $rates->find('ID', $value);
+			
+			$rate = false;
 
-			if (!$rate || !$rate->exists()) {
+			if($this->default_rate){
+				$orderTotalPrice = $order->TotalPrice();
+			
+				$TotalPrice = $orderTotalPrice->getAmount();
+				
 				$rate = $rates->first();
+				
+				foreach ($rates as $rateDO){
+					if($rateDO->ThresholdPrice >= $TotalPrice){
+						$rate = $rateDO;
+					}
+				}
+			}else{	
+				//Pick the rate
+				$rate = $rates->find('ID', $value);
+	
+				if (!$rate || !$rate->exists()) {
+					$rate = $rates->first();
+				}
 			}
 
 			//Generate the Modification now that we have picked the correct rate
@@ -47,12 +65,34 @@ Debug::show($rates);
 	public function getFlatShippingRates(Country_Shipping $country) {
 		//Get valid rates for this country
 		$countryID = ($country && $country->exists()) ? $country->ID : null;
+		
 		$rates = FlatFeeShippingRate::get()->filter("CountryID", $countryID);
+		
+		//couldn't find country for this rates
+		if( ! ( $rates && $rates->Count())){
+			$country = Country_Shipping::get()
+				->filter("Code", 'OA')
+				->first();
+				
+			$countryID = $country->ID;
+				
+			$rates = FlatFeeShippingRate::get()
+						->filter("CountryID", $countryID)
+						->sort('"ThresholdPrice" DESC');
+			
+			if($rates && $rates->Count()){
+				$this->default_rate = true;
+			}
+		}
+		
 		$this->extend("updateFlatShippingRates", $rates, $country);
+		
 		return $rates;
 	}
 
 	public function getFormFields() {
+		
+		$allowedMultiple = true;
 
 		$fields = new FieldList();
 		$rate = $this->FlatFeeShippingRate();
@@ -60,7 +100,7 @@ Debug::show($rates);
 
 		if ($rates && $rates->exists()) {
 
-			if ($rates->count() > 1) {
+			if ( ! $allowedMultiple && $rates->count() > 1) {
 				$field = FlatFeeShippingModifierField_Multiple::create(
 					$this,
 					_t('FlatFeeShippingModification.FIELD_LABEL', 'Shipping'),
@@ -68,12 +108,17 @@ Debug::show($rates);
 				)->setValue($rate->ID);
 			}
 			else {
-				$newRate = $rates->first();
+				if( ! $allowedMultiple){
+					$newRate = $rate;
+				}else{
+					$newRate = $rates->first();
+				}
+				
 				$field = FlatFeeShippingModifierField::create(
 					$this,
 					$newRate->Title,
 					$newRate->ID
-				)->setAmount($newRate->Price());
+				)->setModification($this)->setAmount($newRate->Price());
 			}
 
 			$fields->push($field);

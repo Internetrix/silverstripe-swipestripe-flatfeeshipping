@@ -15,6 +15,11 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	 * @var Money
 	 */
 	protected $amount;
+	
+	/**
+	 * @var FlatFeeShippingModification
+	 */
+	protected $Modification;
 
 	/**
 	 * Render field with the appropriate template.
@@ -26,6 +31,11 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('swipestripe-flatfeeshipping/javascript/FlatFeeShippingModifierField.js');
 		return $this->renderWith($this->template);
+	}
+	
+	public function setModification(FlatFeeShippingModification $Modification) {
+		$this->Modification = $Modification;
+		return $this;
 	}
 	
 	/**
@@ -44,7 +54,7 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	 * @return String
 	 */
 	public function Description() {
-		if($this->amount->getValue()){
+		if($this->amount->getAmount() > 0.00){
 			return $this->amount->Nice();
 		}else{
 			return 'FREE';
@@ -62,6 +72,22 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	
 	public function IsShipping(){
 		return true;
+	}
+	
+	public function RateDescForSameRegion(){
+		
+		$rate = FlatFeeShippingRate::get()->byID($this->Value());
+		$rates = $this->Modification->getFlatShippingRates($rate->Country());
+		
+		$HTML = false;
+		
+		if($rates && $rates->Count()){
+			$ratesArray = $rates->map('ID', 'Description')->toArray();
+			
+			$HTML = implode('<br><br>', $ratesArray);
+		}
+		
+		return $HTML;
 	}
 }
 

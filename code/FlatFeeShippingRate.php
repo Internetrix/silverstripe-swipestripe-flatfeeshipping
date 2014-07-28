@@ -38,6 +38,7 @@ class FlatFeeShippingRate extends DataObject {
 		'Title' => 'Title',
 		'Description' => 'Description',
 		'SummaryOfPrice' => 'Amount',
+		'SummaryOfThresholdPriceAmount' => 'Threshold',
 		'Country.Title' => 'Country'
 	);
 
@@ -121,6 +122,22 @@ class FlatFeeShippingRate extends DataObject {
 		$amount->setSymbol($shopConfig->BaseCurrencySymbol);
 		return $amount;
 	}
+	
+	public function ThresholdPriceAmount() {
+		$shopConfig = ShopConfig::current_shop_config();
+	
+		$amount = new Price();
+		$amount->setAmount($this->ThresholdPrice);
+		$amount->setCurrency($shopConfig->BaseCurrency);
+		$amount->setSymbol($shopConfig->BaseCurrencySymbol);
+		return $amount;
+	}
+	
+	public function SummaryOfThresholdPriceAmount() {
+		return $this->ThresholdPriceAmount()->Nice();
+	}
+	
+	
 
 	/**
 	 * Display price, can decorate for multiple currency etc.
