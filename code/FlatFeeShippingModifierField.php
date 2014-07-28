@@ -54,6 +54,13 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	 * @return String
 	 */
 	public function Description() {
+		
+		$customer = Customer::currentUser();
+		
+		if($customer->IsReseller() && $this->amount->getAmount() == 0.00){
+			return 'T.B.D';
+		}
+		
 		if($this->amount->getAmount() > 0.00){
 			return $this->amount->Nice();
 		}else{
