@@ -23,7 +23,7 @@ class FlatFeeShippingModification extends Modification {
 
 		$rates = $this->getFlatShippingRates($country);
 		if ($rates && $rates->exists()) {
-
+Debug::show($rates);
 			//Pick the rate
 			$rate = $rates->find('ID', $value);
 

@@ -18,7 +18,8 @@ class FlatFeeShippingRate extends DataObject {
 	private static $db = array(
 		'Title' => 'Varchar',
 		'Description' => 'Varchar',
-		'Price' => 'Decimal(19,4)'
+		'Price' => 'Decimal(19,4)',
+		'ThresholdPrice' => 'Decimal(19,4)'
 	);
 	
 	/**
@@ -81,7 +82,9 @@ class FlatFeeShippingRate extends DataObject {
 					TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description'))
 						->setRightTitle('Label used in checkout form.'),
 					DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray()),
-					PriceField::create('Price')
+					PriceField::create('Price'),
+					PriceField::create('ThresholdPrice', 'Threshold')
+						->setRightTitle('If threshold is set, this shipping rate will be applied if order total price over the threshold.')
 				)
 			)
 		);

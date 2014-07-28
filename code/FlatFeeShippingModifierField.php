@@ -44,7 +44,11 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	 * @return String
 	 */
 	public function Description() {
-		return $this->amount->Nice();
+		if($this->amount->getValue()){
+			return $this->amount->Nice();
+		}else{
+			return 'FREE';
+		}
 	}
 
 	/**
@@ -53,6 +57,10 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	 * @return Boolean True
 	 */
 	public function modifiesSubTotal() {
+		return true;
+	}
+	
+	public function IsShipping(){
 		return true;
 	}
 }
