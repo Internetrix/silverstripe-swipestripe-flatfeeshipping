@@ -16,6 +16,13 @@ class FlatFeeShippingModification extends Modification {
 	protected $default_rate = false;
 
 	public function add($order, $value = null) {
+		
+		$postData = Controller::curr()->request->postVars();
+		$postData = Convert::raw2sql($postData);
+		
+		if( ! isset($postData['ShippingCountryCode'])){
+			return '';
+		}
 
 		$this->OrderID = $order->ID;
 
@@ -24,6 +31,7 @@ class FlatFeeShippingModification extends Modification {
 				->first();
 
 		$rates = $this->getFlatShippingRates($country);
+		
 		if ($rates && $rates->exists()) {
 			
 			$rate = false;
@@ -36,7 +44,10 @@ class FlatFeeShippingModification extends Modification {
 				$rate = $rates->first();
 				
 				foreach ($rates as $rateDO){
-					if($rateDO->ThresholdPrice >= $TotalPrice){
+					Debug::show($TotalPrice);
+					Debug::show($rateDO->ThresholdPrice);
+					Debug::show($TotalPrice > $rateDO->ThresholdPrice);
+					if($TotalPrice > $rateDO->ThresholdPrice){
 						$rate = $rateDO;
 					}
 				}
@@ -78,7 +89,7 @@ class FlatFeeShippingModification extends Modification {
 				
 			$rates = FlatFeeShippingRate::get()
 						->filter("CountryID", $countryID)
-						->sort('"ThresholdPrice" DESC');
+						->sort('"ThresholdPrice" ASC');
 			
 			if($rates && $rates->Count()){
 				$this->default_rate = true;
