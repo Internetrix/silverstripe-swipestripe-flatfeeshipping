@@ -44,9 +44,6 @@ class FlatFeeShippingModification extends Modification {
 				$rate = $rates->first();
 				
 				foreach ($rates as $rateDO){
-					Debug::show($TotalPrice);
-					Debug::show($rateDO->ThresholdPrice);
-					Debug::show($TotalPrice > $rateDO->ThresholdPrice);
 					if($TotalPrice > $rateDO->ThresholdPrice){
 						$rate = $rateDO;
 					}
@@ -64,7 +61,6 @@ class FlatFeeShippingModification extends Modification {
 			$mod = new FlatFeeShippingModification();
 
 			$mod->Price = $rate->Amount()->getAmount();
-
 			$mod->Description = $rate->Description;
 			$mod->OrderID = $order->ID;
 			$mod->Value = $rate->ID;
@@ -103,7 +99,7 @@ class FlatFeeShippingModification extends Modification {
 
 	public function getFormFields() {
 		
-		$allowedMultiple = true;
+		$allowedMultiple = false;
 
 		$fields = new FieldList();
 		$rate = $this->FlatFeeShippingRate();
@@ -111,7 +107,7 @@ class FlatFeeShippingModification extends Modification {
 
 		if ($rates && $rates->exists()) {
 
-			if ( ! $allowedMultiple && $rates->count() > 1) {
+			if ($allowedMultiple && $rates->count() > 1) {
 				$field = FlatFeeShippingModifierField_Multiple::create(
 					$this,
 					_t('FlatFeeShippingModification.FIELD_LABEL', 'Shipping'),
