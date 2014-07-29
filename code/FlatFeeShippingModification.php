@@ -7,7 +7,7 @@ class FlatFeeShippingModification extends Modification {
 	);
 
 	private static $defaults = array(
-		'SubTotalModifier' => true,
+		'SubTotalModifier' => false,
 		'SortOrder' => 50
 	);
 
