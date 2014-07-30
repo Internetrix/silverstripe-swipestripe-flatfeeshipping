@@ -43,6 +43,16 @@ class FlatFeeShippingRate extends DataObject {
 		'Country.Title' => 'Country'
 	);
 
+	public function onBeforeWrite(){
+		
+		if($this->ForReseller){
+			$this->Price = 0;
+			$this->ThresholdPrice = 0;
+			$this->CountryID = 0;
+		}
+		
+	}
+	
     public function providePermissions()
     {
         return array(
