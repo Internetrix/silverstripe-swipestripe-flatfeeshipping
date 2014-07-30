@@ -45,6 +45,8 @@ class FlatFeeShippingRate extends DataObject {
 
 	public function onBeforeWrite(){
 		
+		parent::onBeforeWrite();
+		
 		if($this->ForReseller){
 			$this->Price = 0;
 			$this->ThresholdPrice = 0;
