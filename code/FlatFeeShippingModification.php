@@ -14,7 +14,7 @@ class FlatFeeShippingModification extends Modification {
 	private static $default_sort = 'SortOrder ASC';
 	
 	protected $default_rate = false;
-
+	
 	public function add($order, $value = null) {
 		
 		$postData = Controller::curr()->request->postVars();
@@ -135,4 +135,5 @@ class FlatFeeShippingModification extends Modification {
 
 		return $fields;
 	}
+	
 }
