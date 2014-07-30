@@ -19,7 +19,8 @@ class FlatFeeShippingRate extends DataObject {
 		'Title' => 'Varchar',
 		'Description' => 'Varchar',
 		'Price' => 'Decimal(19,4)',
-		'ThresholdPrice' => 'Decimal(19,4)'
+		'ThresholdPrice' => 'Decimal(19,4)',
+		'ForReseller' => 'Boolean'
 	);
 	
 	/**
@@ -82,9 +83,13 @@ class FlatFeeShippingRate extends DataObject {
 					TextField::create('Title', _t('FlatFeeShippingRate.TITLE', 'Title')),
 					TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description'))
 						->setRightTitle('Label used in checkout form.'),
-					DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray()),
-					PriceField::create('Price'),
+					CheckboxField::create('ForReseller', 'For Reseller?'),	
+					DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray())
+						->hideIf ( "ForReseller" )->isChecked()->end (),
+					PriceField::create('Price')
+						->hideIf ( "ForReseller" )->isChecked()->end (),
 					PriceField::create('ThresholdPrice', 'Threshold')
+						->hideIf ( "ForReseller" )->isChecked()->end ()
 						->setRightTitle('If threshold is set, this shipping rate will be applied if order total price over the threshold.')
 				)
 			)
