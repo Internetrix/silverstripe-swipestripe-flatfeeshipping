@@ -17,7 +17,7 @@ class FlatFeeShippingRate extends DataObject {
 	 */
 	private static $db = array(
 		'Title' => 'Varchar',
-		'Description' => 'Varchar',
+		'Description' => 'Varchar(255)',
 		'Price' => 'Decimal(19,4)',
 		'ThresholdPrice' => 'Decimal(19,4)',
 		'ForReseller' => 'Boolean'

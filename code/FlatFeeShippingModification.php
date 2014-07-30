@@ -17,6 +17,24 @@ class FlatFeeShippingModification extends Modification {
 	
 	public function add($order, $value = null) {
 		
+		$member = Member::currentUser();
+		if($member && $member->ID && $member->IsReseller()){
+			$resellerRate = FlatFeeShippingRate::get()->filter(array('ForReseller' => true))->first();
+			
+			if($resellerRate && $resellerRate->ID){
+				$mod = new FlatFeeShippingModification();
+				
+				$mod->Price = $resellerRate->Amount()->getAmount();
+				$mod->Description = $resellerRate->Description;
+				$mod->OrderID = $order->ID;
+				$mod->Value = $resellerRate->ID;
+				$mod->FlatFeeShippingRateID = $resellerRate->ID;
+				$mod->write();
+				
+				return;
+			}
+		}
+		
 		$postData = Controller::curr()->request->postVars();
 		$postData = Convert::raw2sql($postData);
 		

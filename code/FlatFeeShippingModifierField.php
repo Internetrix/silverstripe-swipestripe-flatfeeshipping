@@ -96,6 +96,7 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 		
 		return $HTML;
 	}
+	
 }
 
 class FlatFeeShippingModifierField_Multiple extends ModificationField_Dropdown {
