@@ -1,6 +1,10 @@
 <?php
 
 class FlatFeeShippingModification extends Modification {
+	
+	private static $db = array(
+		'ForReseller' => 'Boolean'
+	);
 
 	private static $has_one = array(
 		'FlatFeeShippingRate' => 'FlatFeeShippingRate'
@@ -29,6 +33,7 @@ class FlatFeeShippingModification extends Modification {
 				$mod->OrderID = $order->ID;
 				$mod->Value = $resellerRate->ID;
 				$mod->FlatFeeShippingRateID = $resellerRate->ID;
+				$mod->ForReseller = true;
 				$mod->write();
 				
 				return;

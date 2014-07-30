@@ -58,7 +58,10 @@ class FlatFeeShippingModifierField extends ModificationField_Hidden {
 		$customer = Customer::currentUser();
 		
 		if($customer && $customer->ID && $customer->IsReseller() && $this->amount->getAmount() == 0.00){
-			return '';
+			$mod = $this->getModifier();
+			if($mod && $mod->ForReseller){
+				return $mod->FlatFeeShippingRate()->Description;
+			}
 		}
 		
 		if($this->amount->getAmount() > 0.00){
