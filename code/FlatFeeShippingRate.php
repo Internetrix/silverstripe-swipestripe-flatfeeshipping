@@ -186,7 +186,8 @@ class FlatFeeShippingRate_Extension extends DataExtension {
 	 * @see DataObjectDecorator::extraStatics()
 	 */
 	private static $has_many = array(
-		'FlatFeeShippingRates' => 'FlatFeeShippingRate'
+		'FlatFeeShippingRates' => 'FlatFeeShippingRate',
+		'Couriers' => 'ShippingCourier'
 	);
 
 }
@@ -272,6 +273,14 @@ class FlatFeeShippingRate_Admin extends ShopAdmin {
 						'FlatFeeShippingRates',
 						'FlatFeeShippingRates',
 						$shopConfig->FlatFeeShippingRates(),
+						GridFieldConfig_HasManyRelationEditor::create()
+					)
+				)
+				,$couriertab = new Tab('Couriers',
+					GridField::create(
+						'Couriers',
+						'Couriers',
+						$shopConfig->Couriers(),
 						GridFieldConfig_HasManyRelationEditor::create()
 					)
 				)
