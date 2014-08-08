@@ -13,7 +13,7 @@ class ShippingCourier extends DataObject {
 	
 	private static $default_records = array(
 		array('Title' => "AUS POST", 'ShopConfigID' => 1),
-		array('Title' => "Fast", 'ShopConfigID' => 1),
+		array('Title' => "Fast Way", 'ShopConfigID' => 1),
 		array('Title' => "DHL", 'ShopConfigID' => 1),
 		array('Title' => "TNT", 'ShopConfigID' => 1)
 	);
