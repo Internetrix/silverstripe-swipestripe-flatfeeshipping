@@ -54,7 +54,7 @@ class FlatFeeShippingModification extends Modification {
 				->first();
 
 		$rates = $this->getFlatShippingRates($country);
-		
+	
 		if ($rates && $rates->exists()) {
 			
 			$rate = false;
@@ -96,8 +96,8 @@ class FlatFeeShippingModification extends Modification {
 		//Get valid rates for this country
 		$countryID = ($country && $country->exists()) ? $country->ID : null;
 		
-		$rates = FlatFeeShippingRate::get()->filter("CountryID", $countryID);
-		
+		$rates = FlatFeeShippingRate::get()->filter("CountryID", $countryID)->sort('"ThresholdPrice" ASC');
+
 		//couldn't find country for this rates
 		if( ! ( $rates && $rates->Count())){
 			$country = Country_Shipping::get()
@@ -109,7 +109,7 @@ class FlatFeeShippingModification extends Modification {
 			$rates = FlatFeeShippingRate::get()
 						->filter("CountryID", $countryID)
 						->sort('"ThresholdPrice" ASC');
-			
+
 			if($rates && $rates->Count()){
 				$this->default_rate = true;
 			}
