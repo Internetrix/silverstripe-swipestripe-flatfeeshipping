@@ -3,8 +3,9 @@
 class ShippingCourier extends DataObject {
 
 	private static $db = array(
-		'Title' => 'Varchar',
-		'Description' => 'Varchar(255)'
+		'Title' 		=> 'Varchar',
+		'TrackingLink' 	=> 'Varchar(255)',
+		'Description' 	=> 'Varchar(255)'
 	);
 	
 	private static $has_one = array(
@@ -20,6 +21,7 @@ class ShippingCourier extends DataObject {
 
 	private static $summary_fields = array(
 		'Title' => 'Title',
+		'TrackingLink' => 'Tracking Website',
 		'Description' => 'Description'
 	);
 	
@@ -29,6 +31,7 @@ class ShippingCourier extends DataObject {
 			$rootTab = new TabSet('Root',
 				$tabMain = new Tab('ShippingRate',
 					TextField::create('Title', 'Name'),
+					TextField::create('TrackingLink', 'Tracking Website'),
 					TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description'))
 				)
 			)
