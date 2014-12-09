@@ -74,7 +74,7 @@ class FlatFeeShippingRate extends DataObject {
 	 */
 	public function getCMSFields() {
 
-		return new FieldList(
+		$fields = FieldList(
 			$rootTab = new TabSet('Root',
 				$tabMain = new Tab('ShippingRate',
 					TextField::create('Title', _t('FlatFeeShippingRate.TITLE', 'Title')),
@@ -85,6 +85,8 @@ class FlatFeeShippingRate extends DataObject {
 				)
 			)
 		);
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
 	}
 	
 	/**
